@@ -62,7 +62,6 @@
 import chatTile from './components/ChatTile.vue'
 import message from './components/Message.vue'
 import { setInterval } from 'timers';
-import { close } from 'fs';
 
 export default {
   components: {
@@ -100,11 +99,9 @@ export default {
   },
   created() {
     this.chatsUpdate = setInterval(() => {
-      this.axios.get('https://api.smartypanel.ru/v1/chats/', {
+      this.axios.get('https://api.smartypanel.ru/v1/chats/?accessToken=ffefeb92a2d7ad04404fe2d44ef19bb8e0fcd863', {
         headers: {
-          'Access-Control-Allow-Origin': '*',          
-          'Authorization': 'Bearer ffefeb92a2d7ad04404fe2d44ef19bb8e0fcd863',
-          'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE'
+          'Access-Control-Allow-Origin': '*'
         }}).then((res) => {
         if (res.status == 200) {
           res.data.chats.forEach((chat) => {
@@ -132,7 +129,7 @@ export default {
       this.activeChat = this.chats[index]
       this.chats[index].isActive = true
       this.uptadeMessages = setInterval(() => {
-        this.axios.get('').then(() => {
+        this.axios.get('').then((res) => {
           this.activeChat.messages = res.data
         }).catch(err => console.log(err))
       }, 1000)
