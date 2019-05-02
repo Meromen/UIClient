@@ -101,8 +101,7 @@ export default {
     this.chatsUpdate = setInterval(() => {
       this.axios.get('https://api.smartypanel.ru/v1/chats?accessToken=ffefeb92a2d7ad04404fe2d44ef19bb8e0fcd863', {
         headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Authorization': 'Bearer ffefeb92a2d7ad04404fe2d44ef19bb8e0fcd863'
+          'Access-Control-Allow-Origin': '*'
         }}).then((res) => {
         if (res.status == 200) {
           res.data.chats.forEach((chat) => {
@@ -142,30 +141,18 @@ export default {
 
     },
     changeStatus() {
-      this.axios.put('https://api.smartypanel.ru/v1/chats/${this.chats.id}', {
-        headers: {
-            'Authorization': 'Bearer ffefeb92a2d7ad04404fe2d44ef19bb8e0fcd863'
-        }
-      }, !this.activeChat.status).then(() => {
+      this.axios.put('https://api.smartypanel.ru/v1/chats/${this.chats.id}', !this.activeChat.status).then(() => {
         this.activeChat.status = !this.activeChat.status
       })
     },
     sendMessage() {
       if (this.activeChat.messanger.toLowerCase() == 'whatsapp'){
-        this.axios.post('https://api.smartypanel.ru/v1/messages', {
-          headers: {
-            'Authorization': 'Bearer ffefeb92a2d7ad04404fe2d44ef19bb8e0fcd863'
-          }
-        }, {'message' : this.messageText, 'sender' : false}).then(() => {
+        this.axios.post('https://api.smartypanel.ru/v1/messages', {'message' : this.messageText, 'sender' : false}).then(() => {
           this.activeChat.messages.push({'message': this.messageText, 'sender': false})
           this.messageText = '';
         }).catch(err => console.log(err))
       } else if (this.activeChat.messanger.toLowerCase() == 'telegram'){
-        this.axios.post('https://api.smartypanel.ru/v1/messages', {
-          headers: {
-            'Authorization': 'Bearer ffefeb92a2d7ad04404fe2d44ef19bb8e0fcd863'
-          }
-        }, {'message' : this.messageText, 'sender' : false}).then(() => {
+        this.axios.post('https://api.smartypanel.ru/v1/messages', {'message' : this.messageText, 'sender' : false}).then(() => {
           this.activeChat.messages.push({'message': this.messageText, 'sender': false})
           this.messageText = '';
         }).catch(err => console.log(err))
