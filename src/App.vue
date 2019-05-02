@@ -47,7 +47,7 @@
 								</div>
 								<textarea name="" v-model="messageText" class="form-control type_msg" placeholder="Type your message..."></textarea>
 								<div @click="sendMessage" class="input-group-append">
-									<span class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></span>
+									<span class="input-group-text send_btn" @click="sendMessage"><i class="fas fa-location-arrow"></i></span>
 								</div>
 							</div>
 						</div>
@@ -71,21 +71,21 @@ export default {
   data() {
     return {
       chats: [{
-        'name': 'Maxim',
+        'name': '',
         'messages': [{
-          'message': 'Hello, boiiiiiiiiiiiiiiiiiiiiii',
+          'message': '',
           'sender': true
         },{
-          'message': 'Daun, boiiiiiiiiiiiiiiiiiiiiii',
+          'message': '',
           'sender': false
         }],
         'messanger': 'Vk',
         'status': true
       },
       {
-        'name': 'Yuras',
+        'name': '',
         'messages': [{
-          'message': 'wqeqweqweqweqwaaaaa',
+          'message': '',
           'sender': false
         }],
         'messanger': 'Tg',
@@ -94,7 +94,7 @@ export default {
       activeChat: undefined,
       messageText: '',
       uptadeMessages: undefined,
-      chatsUpdate: undefined
+      chatsUpdate: undefined,
     }
   },
   created() {
@@ -129,25 +129,26 @@ export default {
       this.activeChat = this.chats[index]
       this.chats[index].isActive = true
       this.uptadeMessages = setInterval(() => {
-        this.axios.get('').then((res) => {
+        this.axios.get('https://api.smartypanel.ru/v1/chats').then((res) => {
+          console.log(res.data);
           this.activeChat.messages = res.data
         }).catch(err => console.log(err))
       }, 1000)
 
     },
     changeStatus() {
-      this.axios.post('', !this.activeChat.status).then(() => {
+      this.axios.put('https://api.smartypanel.ru/v1/chats/${this.chats.id}', !this.activeChat.status).then(() => {
         this.activeChat.status = !this.activeChat.status
       })
     },
     sendMessage() {
       if (this.activeChat.messanger.toLowerCase() == 'whatsapp'){
-        this.axios.post('', {'message' : this.messageText, 'sender' : false}).then(() => {
+        this.axios.post('https://api.smartypanel.ru/v1/messages', {'message' : this.messageText, 'sender' : false}).then(() => {
           this.activeChat.messages.push({'message': this.messageText, 'sender': false})
           this.messageText = '';
         }).catch(err => console.log(err))
       } else if (this.activeChat.messanger.toLowerCase() == 'telegram'){
-        this.axios.post('', {'message' : this.messageText, 'sender' : false}).then(() => {
+        this.axios.post('https://api.smartypanel.ru/v1/messages', {'message' : this.messageText, 'sender' : false}).then(() => {
           this.activeChat.messages.push({'message': this.messageText, 'sender': false})
           this.messageText = '';
         }).catch(err => console.log(err))
